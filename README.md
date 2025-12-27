@@ -116,7 +116,7 @@
   </main>
 
   <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-    <button @click="showCalc = !showCalc" class="w-14 h-14 bg-emerald-500 text-white rounded-full shadow-xl shadow-emerald-200 flex items-center justify-center text-xl hover:scale-105 active:scale-95 transition-transform group">
+    <button @click.stop="showCalc = !showCalc" class="w-14 h-14 bg-emerald-500 text-white rounded-full shadow-xl shadow-emerald-200 flex items-center justify-center text-xl hover:scale-105 active:scale-95 transition-transform group">
       <i class="fas fa-calculator" :class="{'animate-spin-slow': loadingRate}"></i>
     </button>
   </div>
@@ -294,12 +294,17 @@
       
       const openMapModal = (event) => {
         selectedEvent.value = event;
-        mapUrl.value = `https://googleusercontent.com/maps.google.com/search?q=${encodeURIComponent(event.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+        // 使用正確的 Google Maps Embed 網址
+        mapUrl.value = `https://maps.google.com/maps?q=${encodeURIComponent(event.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
         showModal.value = true;
       };
 
       const closeModal = () => { showModal.value = false; mapUrl.value = ''; };
-      const navigateTo = (location) => window.open(`https://googleusercontent.com/maps.google.com/search?q=${encodeURIComponent(location)}`, '_blank');
+      
+      const navigateTo = (location) => {
+        // 使用 Google Maps Universal Link，這會自動喚醒手機上的 App
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, '_blank');
+      };
 
       const fetchWeather = async (lat, lon) => {
         loadingWeather.value = true;
